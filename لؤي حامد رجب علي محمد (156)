@@ -1,0 +1,179 @@
+create database book ;
+use book ;
+create table customer (
+c_ID int primary key ,
+c_Name varchar(255), 
+Email varchar(255) ,
+c_phone int
+);
+create table author (
+a_ID int primary key ,
+a_Name varchar(255), 
+a_Email varchar(255) ,
+a_phone int
+);
+create table shoppingBasket (
+shB_ID int primary key ,
+c_ID int foreign key references customer (c_ID)
+);
+create table publisher (
+p_ID int primary key ,
+p_Name varchar(255), 
+p_Address varchar(255) ,
+p_phone int
+);
+create table Books (
+b_ID int primary key ,
+p_ID int foreign key references publisher (p_ID) ,
+a_ID int foreign key references author (a_ID) ,
+title varchar(255), 
+years int ,
+price int
+);
+create table shoppingBasket_Book (
+shBB_ID int primary key ,
+b_ID int foreign key references Books (b_ID) ,
+counts int ,
+shB_ID int foreign key references shoppingBasket (shB_ID)
+);
+use book ;
+insert into author 
+values (111 , 'William Shakespeare' , 'WilliamShakespeare@gmail.com' , 0123);
+insert into publisher 
+values (411 , 'William' , '12sr.landon' , 2345);
+insert into Books (b_ID , title , years , price)
+values (211 , 'Shakespeare' , 1980 , 20);
+insert into customer 
+values (311 , 'salem' , 'salemm@gmail.com' , 1234);
+insert into shoppingBasket (shB_ID)
+values (511 );
+insert into shoppingBasket_Book (shBB_ID , counts)
+values (611 , 1 ); 
+use book ;
+insert into author 
+values (112 , 'solly khalel' , 'solkh@gmail.com' , 01234);
+insert into publisher 
+values (412 , 'paulo' , '18sr.canda' , 23456);
+insert into Books (b_ID , title , years , price)
+values (212 , 'cars' , 1981 , 30);
+insert into customer 
+values (312 , 'ahmed' , 'ahmed@gmail.com' , 12345);
+insert into shoppingBasket (shB_ID)
+values (512 );
+insert into shoppingBasket_Book (shBB_ID , counts)
+values (612 , 2 );
+use book ;
+insert into author 
+values (113 , 'nour alla' , 'nour@gmail.com' , 01234);
+insert into publisher 
+values (413 , 'sara' , '15sr.faranca' , 23456);
+insert into Books (b_ID , title , years , price)
+values (213 , 'travel' , 1985 , 10);
+insert into customer 
+values (313 , 'ali' , 'ali@gmail.com' , 123456);
+insert into shoppingBasket (shB_ID)
+values (513 );
+insert into shoppingBasket_Book (shBB_ID , counts)
+values (613 , 3 );
+delete from author where a_ID = 113 ;
+delete from publisher where p_ID = 413 ;
+delete from Books where b_ID = 213 ;
+delete from customer where c_ID = 313 ;
+delete from shoppingBasket where shB_ID = 513 ;
+delete from shoppingBasket_Book where shBB_ID = 613 ;
+update author
+set a_Email = 'sollykhalel@gmail.com'
+where a_Name = 'solly khalel' ;
+update publisher
+set p_Address = '22str.sedny'
+where p_Address = '18sr.canda' ;
+update Books
+set years = 1895
+where b_ID = 212 ;
+update customer
+set c_Name = 'm7md' 
+where c_ID = 312
+update shoppingBasket_Book
+set counts = 3
+where shBB_ID = 612 ; 
+use book ;
+select a_Name , title 
+from author 
+inner join Books on author.a_ID = Books.a_ID ; 
+select title , p_Name
+from Books 
+left join publisher on Books.p_ID = publisher.p_ID ;
+select counts , price 
+from shoppingBasket_Book 
+right join Books on Books.b_ID = shoppingBasket_Book.b_ID ;
+select c_ID , counts 
+from shoppingBasket
+full join shoppingBasket_Book on shoppingBasket.shB_ID =  shoppingBasket_Book.shB_ID ;
+select shB_ID , c_Name 
+from shoppingBasket , customer 
+where shoppingBasket.c_ID = customer.c_ID ;
+select count(price) , title
+from Books 
+group by title ; 
+select count(counts) , b_ID
+from shoppingBasket_Book 
+group by b_ID ; 
+select c_Name , c_phone
+from customer 
+where c_ID = (select counts from shoppingBasket_Book where counts = 2) ; 
+select title , price
+from Books 
+where years > (select count(a_phone) from author ) ; 
+select p_Name 
+from publisher 
+where p_ID = (select p_ID from Books where p_ID = 411) ; 
+select title , price 
+from books ;
+select * 
+from author ;
+select distinct p_Name 
+from publisher ;
+SELECT TOP 2 * 
+FROM shoppingBasket_Book ;
+SELECT TOP 5 PERCENT c_phone 
+FROM Customer; 
+SELECT title 
+FROM Books
+ORDER BY years;
+SELECT a_phone 
+FROM author
+ORDER BY a_Name desc ;
+SELECT  c_Name
+FROM Customer
+ORDER BY c_Name ASC;
+SELECT MIN(years)
+FROM Books ;
+select MAX(p_address)
+from publisher ; 
+SELECT AVG(counts)
+FROM shoppingBasket_Book ;
+SELECT SUM(price)
+FROM books ;
+SELECT *
+FROM customer
+WHERE c_ID = 311 ;
+SELECT c_Name
+FROM customer
+WHERE c_Name LIKE '%a%';
+SELECT c_Name
+FROM customer
+WHERE c_Name IN ('ali', 'ahmed');
+SELECT p_Name AS libraryName
+FROM publisher;
+SELECT title
+FROM Books
+WHERE Price BETWEEN 10 AND 20;
+SELECT c_phone , Email
+FROM customer
+WHERE c_Name IN ('ali', 'ahmed') AND c_Name LIKE '%a%' ;
+SELECT c_phone , Email
+FROM customer
+WHERE c_Name IN ('ali', 'ahmed') or c_Name LIKE '%a%' ;
+SELECT title
+FROM Books
+WHERE NOT years = 2000; 
